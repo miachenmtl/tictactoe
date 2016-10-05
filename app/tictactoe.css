@@ -1,0 +1,10 @@
+.TicTacToeBox {
+  height: 150px;
+  width: 150px;
+  border: 1px;
+  margin: 5px;
+  border-style: solid;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 130px;
+}
