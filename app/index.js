@@ -9,80 +9,129 @@ var TicTacToeContainer = React.createClass({
         row2: [0, 0, 0],
         row3: [0, 0, 0]
       },
-      turn: 1
+      turn: 1,
+      win: false
     }
   },
   handleClick: function(row, col) {
     var rowName = "row" + row.toString();
     var colNum = col - 1;
     var newGrid = this.state.grid;
-    if (newGrid[rowName][colNum] === 0) {
+    if (newGrid[rowName][colNum] === 0 && this.state.turn !== 0) {
       newGrid[rowName][colNum] = this.state.turn;
     }
-    this.setState({
-      grid: newGrid,
-      turn: 2 - (++this.state.turn % 2)
-    });
+    if (this.checkWin(newGrid)) {
+      this.setState({
+        win: true
+      });
+    } else {
+      this.setState({
+        grid: newGrid,
+        turn: 2 - (++this.state.turn % 2)
+      });
+    }
   },
+  checkWin: function() {
+    var i;
+    var j;
+    var product;
+    var rowName = "";
+    // Check rows
+    for (i = 0; i < 3; i++) {
+      rowName = "row" + (i + 1).toString();
+      product = 1;
+      for (j = 0; j < 3; j++) {
+        product *= this.state.grid[rowName][j];
+      }
+      if (product === 1 ||  product === 8) {
+        console.log("We have a winner!")
+        return true;
+      }
+    }
+    // Check cols
+    for (i = 0; i < 3; i++) {
+      product = 1;
+      for (j = 0; j < 3; j++) {
+        rowName = "row" + (j + 1).toString();
+        product *= this.state.grid[rowName][i];
+      }
+      if (product === 1 ||  product === 8) {
+        console.log("We have a winner!")
+        return true;
+      }
+    }
+    // Check diagonals
+    product = this.state.grid.row1[0] * this.state.grid.row2[1] * this.state.grid.row3[2];
+    if (product === 1 ||  product === 8) {
+      console.log("We have a winner!")
+      return true;
+    }
+    product = this.state.grid.row3[0] * this.state.grid.row2[1] * this.state.grid.row1[2];
+    if (product === 1 ||  product === 8) {
+      console.log("We have a winner!")
+      return true;
+    }
+    return false;
+  },
+  /*
+  displayRow: function(rowNum) {
+    var htmlOutput = [];
+    var cellString = "";
+    var i;
+    for (i = 1; i <= 3; i++) {
+      cellString = "";
+      cellString += '<td><TicTacToeBox row="';
+      cellString += rowNum.toString() + '" col="';
+      cellString += i.toString();
+      cellString += '" grid={this.state.grid} click={this.handleClick} />';
+      cellString += '</td>';
+      htmlOutput[i - 1] = cellString;
+    }
+    return htmlOutput;
+  },
+  */
   render: function() {
     return (
       <div>
         <h1> Tic-Tac-Toe</h1>
         <table>
           <tbody>
-            <tr>
-              <td>
-                <TicTacToeBox row="1" col="1" grid={this.state.grid} click={
-                  this.handleClick
-                } />
-              </td>
-              <td>
-                <TicTacToeBox row="1" col="2" grid={this.state.grid} click={
-                  this.handleClick
-                } />
-              </td>
-              <td>
-                <TicTacToeBox row="1" col="3" grid={this.state.grid} click={
-                  this.handleClick
-                } />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <TicTacToeBox row="2" col="1" grid={this.state.grid} click={
-                  this.handleClick
-                } />
-              </td>
-              <td>
-                <TicTacToeBox row="2" col="2" grid={this.state.grid} click={
-                  this.handleClick
-                } />
-              </td>
-              <td>
-                <TicTacToeBox row="2" col="3" grid={this.state.grid} click={
-                  this.handleClick
-                } />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <TicTacToeBox row="3" col="1" grid={this.state.grid} click={
-                  this.handleClick
-                } />
-              </td>
-              <td>
-                <TicTacToeBox row="3" col="2" grid={this.state.grid} click={
-                  this.handleClick
-                } />
-              </td>
-              <td>
-                <TicTacToeBox row="3" col="3" grid={this.state.grid} click={
-                  this.handleClick
-                } />
-              </td>
-            </tr>
+          <tr>
+            <td><TicTacToeBox row="1" col="1" grid={this.state.grid} click={
+                this.handleClick
+              } /></td>
+            <td><TicTacToeBox row="1" col="2" grid={this.state.grid} click={
+                this.handleClick
+              } /></td>
+            <td><TicTacToeBox row="1" col="3" grid={this.state.grid} click={
+                this.handleClick
+              } /></td>
+          </tr>
+          <tr>
+            <td><TicTacToeBox row="2" col="1" grid={this.state.grid} click={
+                this.handleClick
+              } /></td>
+            <td><TicTacToeBox row="2" col="2" grid={this.state.grid} click={
+                this.handleClick
+              } /></td>
+            <td><TicTacToeBox row="2" col="3" grid={this.state.grid} click={
+                this.handleClick
+              } /></td>
+          </tr>
+          <tr>
+            <td><TicTacToeBox row="3" col="1" grid={this.state.grid} click={
+                this.handleClick
+              } /></td>
+            <td><TicTacToeBox row="3" col="2" grid={this.state.grid} click={
+                this.handleClick
+              } /></td>
+            <td><TicTacToeBox row="3" col="3" grid={this.state.grid} click={
+                this.handleClick
+              } /></td>
+          </tr>
           </tbody>
         </table>
+        <StatusBar turn={this.state.turn} win={this.state.win} />
       </div>
     );
   }
@@ -102,7 +151,22 @@ var TicTacToeBox = React.createClass({
       </div>
     );
   }
-})
+});
+
+var StatusBar = React.createClass({
+  render: function() {
+    return (
+      <div>
+        <p>
+          Turn: Player {this.props.turn}
+        </p>
+        <p>
+          Winner: {this.props.win ? "Player " + this.props.turn.toString() : ""}
+        </p>
+      </div>
+    )
+  }
+});
 
 ReactDOM.render(
   <TicTacToeContainer />, document.getElementById("app")
