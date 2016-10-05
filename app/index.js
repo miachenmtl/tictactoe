@@ -10,7 +10,8 @@ var TicTacToeContainer = React.createClass({
         row3: [0, 0, 0]
       },
       turn: 1,
-      win: false
+      win: false,
+      winner: 0
     }
   },
   handleClick: function(row, col) {
@@ -36,6 +37,7 @@ var TicTacToeContainer = React.createClass({
     var j;
     var product;
     var rowName = "";
+    var won;
     // Check rows
     for (i = 0; i < 3; i++) {
       rowName = "row" + (i + 1).toString();
@@ -44,7 +46,11 @@ var TicTacToeContainer = React.createClass({
         product *= this.state.grid[rowName][j];
       }
       if (product === 1 ||  product === 8) {
-        console.log("We have a winner!")
+        won = this.state.turn;
+        this.setState({
+          turn: 0,
+          winner: won
+        });
         return true;
       }
     }
@@ -56,19 +62,25 @@ var TicTacToeContainer = React.createClass({
         product *= this.state.grid[rowName][i];
       }
       if (product === 1 ||  product === 8) {
-        console.log("We have a winner!")
+        this.setState({
+          turn: 0
+        });
         return true;
       }
     }
     // Check diagonals
     product = this.state.grid.row1[0] * this.state.grid.row2[1] * this.state.grid.row3[2];
     if (product === 1 ||  product === 8) {
-      console.log("We have a winner!")
+      this.setState({
+        turn: 0
+      });
       return true;
     }
     product = this.state.grid.row3[0] * this.state.grid.row2[1] * this.state.grid.row1[2];
     if (product === 1 ||  product === 8) {
-      console.log("We have a winner!")
+      this.setState({
+        turn: 0
+      });
       return true;
     }
     return false;
@@ -131,7 +143,7 @@ var TicTacToeContainer = React.createClass({
           </tr>
           </tbody>
         </table>
-        <StatusBar turn={this.state.turn} win={this.state.win} />
+        <StatusBar turn={this.state.turn} win={this.state.win} winner={this.state.winner} />
       </div>
     );
   }
@@ -158,10 +170,10 @@ var StatusBar = React.createClass({
     return (
       <div>
         <p>
-          Turn: Player {this.props.turn}
+          Turn: {this.props.win ? "" : "Player " + this.props.turn.toString()}
         </p>
         <p>
-          Winner: {this.props.win ? "Player " + this.props.turn.toString() : ""}
+          Winner: {this.props.win ? "Player " + this.props.winner.toString() : ""}
         </p>
       </div>
     )
