@@ -46,11 +46,7 @@ var TicTacToeContainer = React.createClass({
         product *= this.state.grid[rowName][j];
       }
       if (product === 1 ||  product === 8) {
-        won = this.state.turn;
-        this.setState({
-          turn: 0,
-          winner: won
-        });
+        this.handleWin();
         return true;
       }
     }
@@ -62,92 +58,65 @@ var TicTacToeContainer = React.createClass({
         product *= this.state.grid[rowName][i];
       }
       if (product === 1 ||  product === 8) {
-        this.setState({
-          turn: 0
-        });
+        this.handleWin();
         return true;
       }
     }
     // Check diagonals
     product = this.state.grid.row1[0] * this.state.grid.row2[1] * this.state.grid.row3[2];
     if (product === 1 ||  product === 8) {
-      this.setState({
-        turn: 0
-      });
+      this.handleWin();
       return true;
     }
     product = this.state.grid.row3[0] * this.state.grid.row2[1] * this.state.grid.row1[2];
     if (product === 1 ||  product === 8) {
-      this.setState({
-        turn: 0
-      });
+      this.handleWin();
       return true;
     }
     return false;
   },
-  /*
-  displayRow: function(rowNum) {
-    var htmlOutput = [];
-    var cellString = "";
-    var i;
-    for (i = 1; i <= 3; i++) {
-      cellString = "";
-      cellString += '<td><TicTacToeBox row="';
-      cellString += rowNum.toString() + '" col="';
-      cellString += i.toString();
-      cellString += '" grid={this.state.grid} click={this.handleClick} />';
-      cellString += '</td>';
-      htmlOutput[i - 1] = cellString;
-    }
-    return htmlOutput;
+  handleWin: function() {
+    won = this.state.turn;
+    this.setState({
+      turn: 0,
+      winner: won
+    });
   },
-  */
+  reset: function() {
+    this.setState(this.getInitialState());
+  },
   render: function() {
     return (
       <div>
         <h1> Tic-Tac-Toe</h1>
         <table>
           <tbody>
-          <tr>
-            <td><TicTacToeBox row="1" col="1" grid={this.state.grid} click={
-                this.handleClick
-              } /></td>
-            <td><TicTacToeBox row="1" col="2" grid={this.state.grid} click={
-                this.handleClick
-              } /></td>
-            <td><TicTacToeBox row="1" col="3" grid={this.state.grid} click={
-                this.handleClick
-              } /></td>
-          </tr>
-          <tr>
-            <td><TicTacToeBox row="2" col="1" grid={this.state.grid} click={
-                this.handleClick
-              } /></td>
-            <td><TicTacToeBox row="2" col="2" grid={this.state.grid} click={
-                this.handleClick
-              } /></td>
-            <td><TicTacToeBox row="2" col="3" grid={this.state.grid} click={
-                this.handleClick
-              } /></td>
-          </tr>
-          <tr>
-            <td><TicTacToeBox row="3" col="1" grid={this.state.grid} click={
-                this.handleClick
-              } /></td>
-            <td><TicTacToeBox row="3" col="2" grid={this.state.grid} click={
-                this.handleClick
-              } /></td>
-            <td><TicTacToeBox row="3" col="3" grid={this.state.grid} click={
-                this.handleClick
-              } /></td>
-          </tr>
+            <TicTacToeRow row="1" grid={this.state.grid}
+              click={this.handleClick} />
+            <TicTacToeRow row="2" grid={this.state.grid}
+              click={this.handleClick} />
+            <TicTacToeRow row="3" grid={this.state.grid}
+              click={this.handleClick} />
           </tbody>
         </table>
         <StatusBar turn={this.state.turn} win={this.state.win} winner={this.state.winner} />
+        <ResetButton click={this.reset} />
       </div>
     );
   }
 });
+
+var TicTacToeRow = React.createClass({
+  render: function() {
+    return (
+      <tr>
+        <td><TicTacToeBox {...this.props} col="1" /></td>
+        <td><TicTacToeBox {...this.props} col="2" /></td>
+        <td><TicTacToeBox {...this.props} col="3" /></td>
+      </tr>
+    )
+  }
+})
 
 var TicTacToeBox = React.createClass({
   render: function() {
@@ -176,7 +145,15 @@ var StatusBar = React.createClass({
           Winner: {this.props.win ? "Player " + this.props.winner.toString() : ""}
         </p>
       </div>
-    )
+    );
+  }
+});
+
+var ResetButton = React.createClass({
+  render: function() {
+    return (
+      <button type="button" onClick={this.props.click}>Reset</button>
+    );
   }
 });
 
