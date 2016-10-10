@@ -1,5 +1,6 @@
 var React = require("react");
 var ReactDOM = require("react-dom");
+var logic = require("./logic")
 
 var TicTacToeContainer = React.createClass({
   getInitialState: function() {
