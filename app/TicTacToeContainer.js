@@ -12,26 +12,31 @@ var TicTacToeContainer = React.createClass({
         row3: [0, 0, 0]
       },
       turn: 1,
-      winner: 0
+      winner: 0,
+      ai: [0, 1]
     }
   },
   handleClick: function(grid, row, col, currentTurn) {
     var rowName = "row" + row.toString();
     var colNum = col - 1;
-    var newGrid = this.state.grid;
+    var newGrid = grid;
     var winCondition;
-    if (newGrid[rowName][colNum] === 0 && this.state.turn !== 0) {
-      newGrid[rowName][colNum] = this.state.turn;
+    var aiStatus = this.state.ai[currentTurn - 1];
+    if (newGrid[rowName][colNum] === 0 && currentTurn !== 0) {
+      if (aiStatus) {
+        newGrid = logic.getAIMove(newGrid, currentTurn, aiStatus);
+      } else {
+        newGrid[rowName][colNum] = currentTurn;
+      }
       winCondition = logic.checkWin(newGrid);
       if (winCondition[0]) {
         this.handleWin(winCondition[1]);
         console.log("We have a winner")
-        return;
       } else {
         console.log("the game continues")
         this.setState({
           grid: newGrid,
-          turn: 2 - (++this.state.turn % 2)
+          turn: 2 - (++currentTurn % 2)
         });
       }
     }

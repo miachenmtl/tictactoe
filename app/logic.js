@@ -7,6 +7,26 @@ function TicTacToeState(grid) {
 }
 
 var logic = {
+  getAIMove: function(grid, turn, aiStatus) {
+    var numLegalMoves;
+    var legalMoves;
+    var nextMoveIndex;
+    var nextMove;
+    var rowName;
+    var col;
+    legalMoves = helperLogic.getLegalMoves(grid);
+    numLegalMoves = legalMoves.length;
+    console.log(legalMoves);
+    if (aiStatus === 1) {
+      nextMoveIndex = Math.floor(Math.random() * numLegalMoves);
+      nextMove = legalMoves[nextMoveIndex];
+      rowName = "row" + nextMove[0].toString();
+      col = nextMove[1] - 1;
+      grid[rowName][col] = turn;
+      console.log(grid);
+      return grid;
+    }
+  },
   checkWin: function(grid) {
     var i;
     var j;
