@@ -1,3 +1,5 @@
+var helperLogic = require("./helperLogic");
+
 function TicTacToeState(grid) {
   this.row1 = grid.row1;
   this.row2 = grid.row2;
@@ -5,27 +7,21 @@ function TicTacToeState(grid) {
 }
 
 var logic = {
-  /** Returns an array of coordinates of remaining blank squares
-    * @param {object} grid The state of the grid
-    * @return {array} coords The array of coordinates of legal moves
-    */
-  getLegalMoves: function(grid) {
+  checkWin: function(grid) {
     var i;
     var j;
-    var coords = [];
-    var rowName = "";
-    for (i = 0; i < 3; i++) {
-      rowName = "row" + (i+1).toString();
-      for (j = 0; j < 3; j++) {
-        if (grid[rowName][j] === 0) {
-          coords.push([i + 1, j + 1]);
+    var positionSummary = helperLogic.getPositionSummary(grid);
+    // For each player, go through position summary
+    for (i = 1; i < 3; i++) {
+      for (j = 0; j < 8; j++) {
+        if (positionSummary[j][i] === 3) {
+          return [true, i, j];
         }
       }
     }
-    return coords;
+    return [false, 0, 0];
   },
-  checkWin(grid) {
-    var i;
+  /*  var i;
     var j;
     var product;
     var rowName = "";
@@ -62,47 +58,7 @@ var logic = {
       return true;
     }
     return false;
-  },
-  /** Returns a 3 * 3 array of arrays, for each row,
-    * lists number of blank squares, number of O
-    * squares, number of X squares
-    * @param {object} grid The state of the grid
-    * @return {array} rowInfo Number of blank, O, and X squares for each row
-    */
-  checkRows: function(grid) {
-    var i;
-    var j;
-    var k;
-    var rowInfo = [
-      [0, 0, 0],
-      [0, 0, 0],
-      [0, 0, 0]
-    ];
-    var rowName = "";
-    // For each row...
-    for (i = 0; i < 3; i++) {
-      rowName = "row" + (i+1).toString();
-      // ... go through the columns...
-      for (j = 0; j < 3; j++) {
-        // ... and count number of blanks, Os, and Xs
-        for (k = 0; k < 3; k++) {
-          if (grid[rowName][j] === k) {
-            rowInfo[i][k]++;
-          }
-        }
-      }
-    }
-    return rowInfo;
-  },
-  checkCols: function(grid) {
+  }*/
+};
 
-  },
-  checkDiags: function(grid) {
-
-  }
-}
-
-// So that the file can be both tested and run in the browser
-if ((typeof module !== "undefined") && (typeof module.exports !== "undefined")) {
-  module.exports = logic;
-}
+module.exports = logic;

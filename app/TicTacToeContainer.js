@@ -12,7 +12,6 @@ var TicTacToeContainer = React.createClass({
         row3: [0, 0, 0]
       },
       turn: 1,
-      win: false,
       winner: 0
     }
   },
@@ -20,11 +19,16 @@ var TicTacToeContainer = React.createClass({
     var rowName = "row" + row.toString();
     var colNum = col - 1;
     var newGrid = this.state.grid;
+    var winCondition;
     if (newGrid[rowName][colNum] === 0 && this.state.turn !== 0) {
       newGrid[rowName][colNum] = this.state.turn;
-      if (logic.checkWin(newGrid)) {
-        this.handleWin();
+      winCondition = logic.checkWin(newGrid);
+      if (winCondition[0]) {
+        this.handleWin(winCondition[1]);
+        console.log("We have a winner")
+        return;
       } else {
+        console.log("the game continues")
         this.setState({
           grid: newGrid,
           turn: 2 - (++this.state.turn % 2)
@@ -32,11 +36,10 @@ var TicTacToeContainer = React.createClass({
       }
     }
   },
-  handleWin: function() {
-    won = this.state.turn;
+  handleWin: function(player) {
     this.setState({
       turn: 0,
-      winner: won
+      winner: player
     });
   },
   handleReset: function() {

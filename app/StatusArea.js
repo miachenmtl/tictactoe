@@ -5,10 +5,10 @@ var StatusArea = React.createClass({
     return (
       <div>
         <p>
-          Turn: {this.props.win ? "" : "Player " + this.props.turn.toString()}
+          Turn: {this.props.winner ? "" : "Player " + this.props.turn.toString()}
         </p>
         <p>
-          Winner: {this.props.win ? "Player " + this.props.winner.toString() : ""}
+          Winner: {this.props.winner ? "Player " + this.props.winner.toString() : ""}
         </p>
         <button type="button" onClick={this.props.onReset}>Reset</button>
       </div>
