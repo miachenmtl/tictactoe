@@ -7,12 +7,9 @@ var TicTacToeGame = React.createClass({
     return (
       <table>
         <tbody>
-          <TicTacToeRow row="1" grid={this.state.grid}
-              click={this.handleClick} turn={this.state.turn} />
-          <TicTacToeRow row="2" grid={this.state.grid}
-              click={this.handleClick} turn={this.state.turn} />
-          <TicTacToeRow row="3" grid={this.state.grid}
-              click={this.handleClick} turn={this.state.turn} />
+          <TicTacToeRow {...this.props} row="1" />
+          <TicTacToeRow {...this.props} row="2" />
+          <TicTacToeRow {...this.props} row="3" />
         </tbody>
       </table>
     );
@@ -39,7 +36,7 @@ var TicTacToeBox = React.createClass({
     var outputIndex = this.props.grid[rowName][colNum];
     return (
       <div className="TicTacToeBox" onClick={
-          this.props.click.bind(null, this.props.grid, this.props.row, this.props.col,
+          this.props.onUserClick.bind(null, this.props.grid, this.props.row, this.props.col,
               this.props.turn
       )}>
         {output[outputIndex]}
