@@ -72,11 +72,31 @@ describe("Helper Logic Module", function() {
       expect(resultArray[7]).to.deep.equal([1, 0, 2]);
     });
   });
+  describe("Find Blank Square from Position", function() {
+    it("retrieves the remaining blank square from near win condition", function() {
+      var testGrid1 = {
+        row1: [1, 2, 0],
+        row2: [0, 2, 1],
+        row3: [2, 1, 0]
+      };
+      var testGrid2 = {
+        row1: [0, 1, 2],
+        row2: [2, 1, 0],
+        row3: [0, 0, 1]
+      };
+      var resultArray1 = helperLogic.findBlankSquareFromPosition(testGrid1, 7);
+      var resultArray2 = helperLogic.findBlankSquareFromPosition(testGrid2, 4);
+      var resultArray3 = helperLogic.findBlankSquareFromPosition(testGrid2, 6);
+      expect(resultArray1).to.deep.equal(["row1", 2]);
+      expect(resultArray2).to.deep.equal(["row3", 1]);
+      expect(resultArray3).to.deep.equal(["row1", 0]);
+    });
+  });
 });
 
 describe("Logic Module", function() {
   describe("Check Win", function() {
-    it("looks for a win condition and returns a bool, the winner, and location code", function() {
+    it("looks for a win condition and returns either -1, 0, or 1, the winner, and location code", function() {
       var testGrid1 = {
         row1: [1, 2, 0],
         row2: [2, 1, 0],
@@ -89,8 +109,26 @@ describe("Logic Module", function() {
       };
       var resultArray1 = logic.checkWin(testGrid1);
       var resultArray2 = logic.checkWin(testGrid2);
-      expect(resultArray1).to.deep.equal([true, 1, 6]);
-      expect(resultArray2).to.deep.equal([false, 0, 0]);
+      expect(resultArray1).to.deep.equal([1, 1, 6]);
+      expect(resultArray2).to.deep.equal([0, 0, 0]);
+    });
+  });
+  describe("Check Near Win", function() {
+    it("looks for a win condition on next move and returns a bool, the winner, and location code", function() {
+      var testGrid1 = {
+        row1: [1, 2, 0],
+        row2: [2, 1, 0],
+        row3: [2, 0, 1]
+      };
+      var testGrid2 = {
+        row1: [1, 2, 0],
+        row2: [0, 2, 1],
+        row3: [2, 1, 0]
+      };
+      var resultArray1 = logic.checkNearWin(testGrid1);
+      var resultArray2 = logic.checkNearWin(testGrid2);
+      expect(resultArray1).to.deep.equal([false, 0, 0]);
+      expect(resultArray2).to.deep.equal([true, 2, 7]);
     });
   });
 });

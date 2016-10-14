@@ -1,11 +1,9 @@
 var React = require("react");
-var ReactDOM = require("react-dom");
-var StatusArea = require("./StatusArea");
 
 var TicTacToeGame = React.createClass({
   render: function() {
     return (
-      <table>
+      <table className="TicTacToeGame">
         <tbody>
           <TicTacToeRow {...this.props} row="1" />
           <TicTacToeRow {...this.props} row="2" />
@@ -24,7 +22,7 @@ var TicTacToeRow = React.createClass({
         <td><TicTacToeBox {...this.props} col="2" /></td>
         <td><TicTacToeBox {...this.props} col="3" /></td>
       </tr>
-    )
+    );
   }
 });
 
@@ -36,8 +34,12 @@ var TicTacToeBox = React.createClass({
     var outputIndex = this.props.grid[rowName][colNum];
     return (
       <div className="TicTacToeBox" onClick={
-          this.props.onUserClick.bind(null, this.props.grid, this.props.row, this.props.col,
-              this.props.turn
+          this.props.onUserClick.bind(
+            null,
+            this.props.grid,
+            this.props.row,
+            this.props.col,
+            this.props.turn
       )}>
         {output[outputIndex]}
       </div>
