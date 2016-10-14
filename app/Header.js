@@ -1,5 +1,9 @@
 var React = require("react");
 
+/** Stateless functional react component
+  * @param {object} props Properties
+  * @return {object} render
+  */
 function Header(props) {
   return (
     <div>
@@ -9,4 +13,4 @@ function Header(props) {
   );
 }
 
-module.exports = Header
+module.exports = Header;
