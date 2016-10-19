@@ -15,10 +15,10 @@ describe("Helper Logic Module", function() {
     });
     it("returns an array of coordinates of remaining blank squares", function() {
       var resultArray = helperLogic.getLegalMoves(testGrid);
-      expect(resultArray[0]).to.deep.equal([1, 1]);
-      expect(resultArray[1]).to.deep.equal([2, 3]);
-      expect(resultArray[2]).to.deep.equal([3, 1]);
-      expect(resultArray[3]).to.deep.equal([3, 2]);
+      expect(resultArray[0]).to.deep.equal(["row1", 0]);
+      expect(resultArray[1]).to.deep.equal(["row2", 2]);
+      expect(resultArray[2]).to.deep.equal(["row3", 0]);
+      expect(resultArray[3]).to.deep.equal(["row3", 1]);
     });
   });
   describe("Check Rows", function() {
@@ -84,12 +84,19 @@ describe("Helper Logic Module", function() {
         row2: [2, 1, 0],
         row3: [0, 0, 1]
       };
+      var testGrid3 = {
+        row1: [1, 2, 0],
+        row2: [1, 0, 0],
+        row3: [0, 0, 0]
+      }
       var resultArray1 = helperLogic.findBlankSquareFromPosition(testGrid1, 7);
       var resultArray2 = helperLogic.findBlankSquareFromPosition(testGrid2, 4);
       var resultArray3 = helperLogic.findBlankSquareFromPosition(testGrid2, 6);
+      var resultArray4 = helperLogic.findBlankSquareFromPosition(testGrid3, 3);
       expect(resultArray1).to.deep.equal(["row1", 2]);
       expect(resultArray2).to.deep.equal(["row3", 1]);
       expect(resultArray3).to.deep.equal(["row1", 0]);
+      expect(resultArray4).to.deep.equal(["row3", 0]);
     });
   });
 });
@@ -125,10 +132,99 @@ describe("Logic Module", function() {
         row2: [0, 2, 1],
         row3: [2, 1, 0]
       };
+      var testGrid3 = {
+        row1: [1, 1, 0],
+        row2: [1, 2, 0],
+        row3: [2, 2, 0]
+      }
       var resultArray1 = logic.checkNearWin(testGrid1);
       var resultArray2 = logic.checkNearWin(testGrid2);
+      var resultArray3 = logic.checkNearWin(testGrid3);
       expect(resultArray1).to.deep.equal([false, 0, 0]);
       expect(resultArray2).to.deep.equal([true, 2, 7]);
+      expect(resultArray3).to.deep.equal([
+        true, 1, 0,
+        true, 2, 2,
+        true, 2, 7
+      ]);
+
     });
   });
+  describe("Check Forced Win", function() {
+    var itString = "checks if on next move it can create two near win chances ";
+    itString += "while ensuring that opponent has no near win";
+    it(itString, function() {
+      var testGrid1 = {
+        row1: [1, 2, 1],
+        row2: [0, 0, 0],
+        row3: [0, 2, 0]
+      };
+      var testGrid2 = {
+        row1: [1, 0, 0],
+        row2: [0, 2, 0],
+        row3: [0, 0, 0]
+      };
+      var testGrid3 = {
+        row1: [1, 0, 0],
+        row2: [0, 2, 0],
+        row3: [2, 0, 1]
+      };
+      var player = 1;
+      var resultObject1 = logic.checkForcedWin(testGrid1, player);
+      var resultObject2 = logic.checkForcedWin(testGrid2, player);
+      var resultObject3 = logic.checkForcedWin(testGrid3, player);
+      expect(resultObject1).to.deep.equal([true, ["row2", 1]]);
+      expect(resultObject2).to.deep.equal([false, ["", 0]]);
+      expect(resultObject3).to.deep.equal([true, ["row1", 2]]);
+    })
+  });
+  describe("Check Can Get Forced Win", function() {
+    var itString = "looks for moves which force opponent to allow a forced ";
+    itString += "win on player's next move";
+    it(itString, function() {
+      var testGrid1 = {
+        row1: [1, 2, 0],
+        row2: [0, 0, 0],
+        row3: [0, 0, 0]
+      };
+      var testGrid2 = {
+        row1: [1, 0, 0],
+        row2: [0, 2, 0],
+        row3: [0, 0, 0]
+      };
+      var player = 1;
+      var resultObject1 = logic.checkCanGetForcedWin(testGrid1, player);
+      var resultObject2 = logic.checkCanGetForcedWin(testGrid2, player);
+      expect(resultObject1).to.deep.equal([
+        true,
+        ["row2", 0],
+        ["row2", 1],
+        ["row3", 0]
+      ]);
+      expect(resultObject2).to.deep.equal([false, ["", 0]]);
+    });
+  });
+  describe("Eliminate Losing Moves", function() {
+    var itString = "takes in an array of candidate moves and eliminates moves";
+    itString += " that enable opponent to have two near win squares";
+    it(itString, function() {
+      var testGrid = {
+        row1: [1, 0, 0],
+        row2: [0, 0, 0],
+        row3: [0, 0, 0]
+      };
+      var resultArray = logic.eliminateLosingMoves(testGrid, 2);
+      expect(resultArray.length).to.equal(1);
+      expect(resultArray[0]).to.deep.equal(["row2", 1]);
+    });
+  });
+  /*describe("Get AI Candidate Moves Smart", function() {
+    it("returns the set of best moves", function() {
+      var testGrid1 = {
+        row1: [1, 0, 0],
+        row2: [0, 0, 2],
+        row3: [0, 0, 0]
+      };
+    });
+  });*/
 });

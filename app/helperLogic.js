@@ -12,7 +12,7 @@ var helperLogic = {
       rowName = "row" + (i + 1).toString();
       for (j = 0; j < 3; j++) {
         if (grid[rowName][j] === 0) {
-          coords.push([i + 1, j + 1]);
+          coords.push([rowName, j]);
         }
       }
     }
