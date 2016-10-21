@@ -25,7 +25,7 @@ var TicTacToeContainer = React.createClass({
     var that = this;
     if (
         (newGrid[rowName][colNum] === 0 || aiStatus[currentTurn - 1] > 0) &&
-        currentTurn !== 0
+        currentTurn > 0
       ) {
       nextMoveResult = logic.getNextMove(
         newGrid,
@@ -43,6 +43,7 @@ var TicTacToeContainer = React.createClass({
       } else if (nextMoveResult.winCondition[0] === -1) {
         this.setState({
           grid: nextMoveResult.newGrid,
+          turn: -1,
           winner: -1
         });
       } else {
@@ -55,7 +56,7 @@ var TicTacToeContainer = React.createClass({
         if (aiStatus[currentTurn - 1] > 0) {
           window.setTimeout(function() {
             that.handleClick(newGrid, 1, 1, currentTurn);
-          }, 1000);
+          }, 250);
         }
       }
     }

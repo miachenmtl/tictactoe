@@ -61,44 +61,38 @@ var logic = {
     }
     else if (aiStatus === 3) {
       // First, check for near win
-      console.log("I'm smart.")
       nearWin = this.checkNearWin(grid);
       if (nearWin[0]) {
-        console.log("There's a near win")
         numOfNearWins = nearWin.length / 3;
         for (i = 0; i < numOfNearWins; i++) {
           if (3 * i + 1 === turn) {
             nextMove = helperLogic.findBlankSquareFromPosition(
               grid,
               nearWin[3 * i + 2]);
+            console.log("Player " + turn + " moved at " + nextMove);
             grid[nextMove[0]][nextMove[1]] = turn;
             return grid;
           }
         }
         nextMove = helperLogic.findBlankSquareFromPosition(grid, nearWin[2]);
+        console.log("Player " + turn + " moved at " + nextMove);
         grid[nextMove[0]][nextMove[1]] = turn;
         return grid;
       } else {
         // Second, check for immediate forced win
         forcedWin = this.checkForcedWin(grid, turn);
-        console.log(forcedWin);
         if (forcedWin[0]) {
-          console.log("There's an immediate forced win");
           forcedWin.shift();
           candidateMoves = forcedWin;
         } else {
           // Third, check if can get forced move on next move
           forcedWin = this.checkCanGetForcedWin(grid, turn);
           if (forcedWin[0]) {
-            console.log("I can force a win");
             forcedWin.shift();
             candidateMoves = forcedWin;
-            console.log(candidateMoves);
           } else {
             // Finally, eliminate losing moves
             candidateMoves = this.eliminateLosingMoves(grid, turn);
-            console.log(candidateMoves);
-            console.log("There are " + candidateMoves.length + " candidate moves");
           }
         }
         grid = this.getRandomMove(grid, candidateMoves, turn);
@@ -110,6 +104,7 @@ var logic = {
     var i;
     var aiGrid;
     var forcedWin;
+    var canGetForcedWin;
     var result = [];
     var opp = 2 - ((player + 1) % 2);
     var legalMoves = helperLogic.getLegalMoves(grid);
@@ -118,11 +113,13 @@ var logic = {
     for (i = 0; i < numLegalMoves; i++) {
       aiGrid = JSON.parse(JSON.stringify(grid));
       aiGrid[legalMoves[i][0]][legalMoves[i][1]] = player;
-      forcedWin = this.checkCanGetForcedWin(aiGrid, opp);
+      forcedWin = this.checkForcedWin(aiGrid, opp);
+      canGetForcedWin = this.checkCanGetForcedWin(aiGrid, opp);
       if (forcedWin[0]) {
         candidateMoveIndexArray[i] = false;
-      }
-      else {
+      } else if (canGetForcedWin[0]) {
+        candidateMoveIndexArray[i] = false;
+      } else {
         candidateMoveIndexArray[i] = true;
       }
     }
@@ -137,6 +134,7 @@ var logic = {
     var numCandidateMoves = candidateMoves.length;
     var nextMoveIndex = Math.floor(Math.random() * numCandidateMoves);
     var nextMove = candidateMoves[nextMoveIndex];
+    console.log("Player " + turn + " moved at " + nextMove);
     grid[nextMove[0]][nextMove[1]] = turn;
     return grid;
   },
@@ -149,11 +147,13 @@ var logic = {
     for (i = 1; i < 3; i++) {
       for (j = 0; j < 8; j++) {
         if (positionSummary[j][i] === 3) {
+          console.log("Win");
           return [1, i, j];
         }
       }
     }
     if (movesLeft === 0) {
+      console.log("Draw");
       return [-1, 0, 0];
     }
     return [0, 0, 0];
