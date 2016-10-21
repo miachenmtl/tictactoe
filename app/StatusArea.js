@@ -3,8 +3,6 @@ var SelectPlayerTable = require("./SelectPlayerTable");
 
 var StatusArea = React.createClass({
   getWinnerText: function(winner) {
-    console.log("get winner text");
-    console.log(winner);
     var winnerText = "";
     if (winner > 0) {
       winnerText = "Player " + winner.toString();

@@ -17,40 +17,48 @@ var TicTacToeContainer = React.createClass({
     };
   },
   handleClick: function(grid, row, col, currentTurn) {
-    var i = 0;
     var rowName = "row" + row.toString();
     var colNum = col - 1;
     var newGrid = grid;
     var nextMoveResult = {};
-    var waitForHuman = false;
     var aiStatus = this.state.ai;
-    if (newGrid[rowName][colNum] === 0 && currentTurn !== 0) {
-      do {
-        i++;
-        nextMoveResult = logic.getNextMove(newGrid, rowName, colNum, currentTurn, aiStatus);
-        if (nextMoveResult.winCondition[0] === 1) {
-          this.handleWin(nextMoveResult.winCondition);
-          this.setState({
-            grid: nextMoveResult.newGrid
-          });
-          return;
-        } else if (nextMoveResult.winCondition[0] === -1) {
-          this.setState({
-            grid: nextMoveResult.newGrid,
-            winner: -1
-          });
-        } else {
-          newGrid = nextMoveResult.newGrid;
-          currentTurn = 2 - (++nextMoveResult.currentTurn % 2);
-          this.setState({
-            grid: newGrid,
-            turn: currentTurn
-          });
-          if (aiStatus[currentTurn - 1] === 0) {
-            waitForHuman = true;
-          }
+    var that = this;
+    if (
+        (newGrid[rowName][colNum] === 0 || aiStatus[currentTurn - 1] > 0) &&
+        currentTurn > 0
+      ) {
+      nextMoveResult = logic.getNextMove(
+        newGrid,
+        rowName,
+        colNum,
+        currentTurn,
+        aiStatus
+      );
+      if (nextMoveResult.winCondition[0] === 1) {
+        this.handleWin(nextMoveResult.winCondition);
+        this.setState({
+          grid: nextMoveResult.newGrid
+        });
+        return;
+      } else if (nextMoveResult.winCondition[0] === -1) {
+        this.setState({
+          grid: nextMoveResult.newGrid,
+          turn: -1,
+          winner: -1
+        });
+      } else {
+        newGrid = nextMoveResult.newGrid;
+        currentTurn = 2 - (++nextMoveResult.currentTurn % 2);
+        this.setState({
+          grid: newGrid,
+          turn: currentTurn
+        });
+        if (aiStatus[currentTurn - 1] > 0) {
+          window.setTimeout(function() {
+            that.handleClick(newGrid, 1, 1, currentTurn);
+          }, 250);
         }
-      } while (!waitForHuman && i < 10);
+      }
     }
   },
   handleWin: function(winCondition) {
@@ -80,7 +88,6 @@ var TicTacToeContainer = React.createClass({
   handleChangeP2: function() {
     var newAIStatus = this.state.ai;
     newAIStatus[1] = document.getElementById("P2Status").selectedIndex;
-    console.log(newAIStatus);
     this.setState({
       ai: newAIStatus
     });

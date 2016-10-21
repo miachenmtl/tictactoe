@@ -23,7 +23,7 @@ function SelectPlayerTable(props) {
               <option>Human</option>
               <option>Clueless AI</option>
               <option>Dumb AI</option>
-              <option disabled>Smart AI</option>
+              <option>Smart AI</option>
             </select>
           </td>
           <td>
@@ -35,7 +35,7 @@ function SelectPlayerTable(props) {
               <option>Human</option>
               <option>Clueless AI</option>
               <option>Dumb AI</option>
-              <option disabled>Smart AI</option>
+              <option>Smart AI</option>
             </select>
           </td>
         </tr>
